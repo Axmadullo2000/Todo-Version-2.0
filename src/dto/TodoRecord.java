@@ -1,4 +1,4 @@
 package dto;
 
-public record TodoRecord() {
+public record TodoRecord(int id, String title, String description, String status) {
 }

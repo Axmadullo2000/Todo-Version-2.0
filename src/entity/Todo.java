@@ -1,8 +1,19 @@
 package entity;
 
-public class Todo {
+public class Todo extends Parent {
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     private String title;
     private String description;
+    private String status;
 
     public String getStatus() {
         return status;
@@ -28,5 +39,13 @@ public class Todo {
         this.title = title;
     }
 
-    private String status;
+    public Todo(String title, String description, String status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+    }
+
+    public String getTodoInfo() {
+        return "\nid: %d, title: %s, description: %s\n".formatted(getId(), title, description);
+    }
 }
