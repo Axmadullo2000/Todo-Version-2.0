@@ -4,6 +4,7 @@
     import dto.UserRecord;
     import entity.Todo;
     import entity.User;
+    import enums.TodoStatus;
 
     import static util.Util.*;
 
@@ -54,7 +55,8 @@
         public boolean createTodo(String title, String description) {
             for (int i = 0; i < todoList.length; i++) {
                 if (todoList[i] == null) {
-                    Todo todo = new Todo(title, description, defaultStatus);
+                    String status = TodoStatus.NEW.name();
+                    Todo todo = new Todo(title, description, status);
                     todo.setId(todoId++);
                     todo.setUserId(userCurrentId);
                     todoList[i] = todo;
@@ -65,11 +67,11 @@
             return false;
         }
 
-        public TodoRecord[] getTodoList() {
+        public TodoRecord[] getNewTodos() {
             int counter = 0;
 
             for (Todo todo: todoList) {
-                if (todo != null && todo.getUserId() == userCurrentId) {
+                if (todo != null && todo.getUserId() == userCurrentId && todo.getStatus().equals(TodoStatus.NEW.name()) ) {
                     counter++;
                 }
             }
@@ -79,7 +81,7 @@
             int index = 0;
 
             for (Todo todo: todoList) {
-                if (todo != null && todo.getUserId() == userCurrentId ) {
+                if (todo != null && todo.getUserId() == userCurrentId && todo.getStatus().equals(TodoStatus.NEW.name())) {
                     TodoRecord todoRecord = new TodoRecord(todo.getId(), todo.getTitle(), todo.getDescription(), todo.getStatus());
                     todoArray[index++] = todoRecord;
                 }
@@ -88,9 +90,35 @@
             return todoArray;
         }
 
+        public TodoRecord[] getCompletedTasks() {
+            int counter = 0;
+
+            for (Todo todo : todoList) {
+                if (todo != null && todo.getUserId() == userCurrentId && todo.getStatus().equals(TodoStatus.COMPLETED.name())) {
+                    counter++;
+                }
+            }
+
+            int index = 0;
+
+            TodoRecord [] completedTasks = new TodoRecord[counter];
+
+            for (Todo todo: todoList) {
+                if (todo != null && todo.getUserId() == userCurrentId && todo.getStatus().equals(TodoStatus.COMPLETED.name()) ) {
+                    completedTasks[index++] = new TodoRecord(
+                            todo.getId(),
+                            todo.getTitle(),
+                            todo.getDescription(),
+                            todo.getStatus());
+                }
+            }
+
+            return completedTasks;
+        }
+
         public TodoRecord updateTodosTitle(int todoId, String title) {
             for (Todo todo : todoList) {
-                if (todo != null && todo.getId() == todoId) {
+                if (todo != null && todo.getId() == todoId && todo.getUserId() == userCurrentId ) {
                     todo.setTitle(title);
                     return new TodoRecord(todo.getId(), title, todo.getDescription(), todo.getStatus());
                 }
@@ -101,7 +129,7 @@
 
         public TodoRecord updateTodosDescription(int todoId, String description) {
             for (Todo todo : todoList) {
-                if (todo != null && todo.getId() == todoId) {
+                if (todo != null && todo.getId() == todoId && todo.getUserId() == userCurrentId) {
                     todo.setDescription(description);
                     return new TodoRecord(todo.getId(), todo.getTitle(), description, todo.getStatus());
                 }
@@ -113,9 +141,10 @@
 
         public TodoRecord updateTodosCompleting(int todoId) {
             for (Todo todo : todoList) {
-                if (todo != null && todo.getId() == todoId) {
-                    todo.setStatus(updatedStatus);
-                    return new TodoRecord(todo.getId(), todo.getTitle(), todo.getDescription(), updatedStatus);
+                if (todo != null && todo.getId() == todoId && todo.getUserId() == userCurrentId) {
+                    String status = TodoStatus.COMPLETED.name();
+                    todo.setStatus(status);
+                    return new TodoRecord(todo.getId(), todo.getTitle(), todo.getDescription(), status);
                 }
             }
 

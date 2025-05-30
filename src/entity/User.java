@@ -1,6 +1,6 @@
 package entity;
 
-public class User extends Parent {
+public non-sealed class User extends Parent {
     private String name;
     private String phoneNumber;
     private String password;

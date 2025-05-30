@@ -1,6 +1,5 @@
 package util;
 
-import dto.TodoRecord;
 import entity.Todo;
 import entity.User;
 
@@ -12,8 +11,6 @@ public class Util {
 
     public static int userCurrentId = 0;
 
-    public static String defaultStatus = "NEW";
-    public static String updatedStatus = "COMPLETED";
 
     public static User [] userList = new User[100];
     public static Todo[] todoList = new Todo[100];

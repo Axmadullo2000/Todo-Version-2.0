@@ -1,6 +1,6 @@
 package entity;
 
-public class Parent {
+public sealed class Parent permits User, Todo {
     private int id;
 
     public int getId() {

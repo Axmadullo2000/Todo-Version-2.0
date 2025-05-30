@@ -1,6 +1,6 @@
 package entity;
 
-public class Todo extends Parent {
+public non-sealed class Todo extends Parent {
     private int userId;
 
     public int getUserId() {

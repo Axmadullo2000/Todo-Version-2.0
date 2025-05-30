@@ -2,12 +2,10 @@ package controller;
 
 import dto.TodoRecord;
 import dto.UserRecord;
-import entity.Todo;
 import entity.User;
+import enums.TodoStatus;
 import service.MainService;
-import util.Util;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static util.Util.*;
@@ -16,12 +14,13 @@ public class MainController {
     MainService mainService = new MainService();
 
     public void authMenu() {
+        {
+            User user1 = new User("Axmadullo", "997494262", "123456789");
+            user1.setId(userId);
+            userList[0] = user1;
+        }
+
         while (true) {
-            {
-                User user1 = new User("Axmadullo", "997494262", "123456789");
-                user1.setId(userId);
-                userList[0] = user1;
-            }
 
             System.out.println("Todo Application");
 
@@ -99,7 +98,7 @@ public class MainController {
                     createTodo();
                 }
                 case 2 -> {
-                    getTodo();
+                    viewTodosMenu();
                 }
                 case 3 -> {
                     editTodo();
@@ -127,19 +126,7 @@ public class MainController {
 
     }
 
-    private void getTodo() {
-
-        TodoRecord [] todoRecords = mainService.getTodoList();
-
-        for (TodoRecord todoRecord: todoRecords) {
-            System.out.println("------------------------------------------------------------------");
-            System.out.println("id: " + todoRecord.id());
-            System.out.println("Title: " + todoRecord.title());
-            System.out.println("Description: " + todoRecord.description());
-            System.out.println("Status: " + todoRecord.status());
-
-            System.out.println("------------------------------------------------------------------");
-        }
+    private void viewTodosMenu() {
         System.out.println("""
                 1. Completed tasks
                 2. New tasks
@@ -161,10 +148,12 @@ public class MainController {
     }
 
     private void getNewTasks() {
-        TodoRecord [] todoRecords = mainService.getTodoList();
+        TodoRecord [] todoRecords = mainService.getNewTodos();
 
         for (TodoRecord todoRecord: todoRecords) {
-            if (todoRecord.status().equals(defaultStatus)) {
+            String status = TodoStatus.NEW.name();
+
+            if (todoRecord.status().equals(status)) {
                 System.out.println("------------------------------------------------------------------");
 
                 System.out.println("id: " + todoRecord.id());
@@ -178,10 +167,12 @@ public class MainController {
     }
 
     private void getCompletedTasks() {
-        TodoRecord [] todoRecords = mainService.getTodoList();
+        TodoRecord [] completedTasks = mainService.getCompletedTasks();
 
-        for (TodoRecord todoRecord: todoRecords) {
-            if (todoRecord.status().equals(updatedStatus)) {
+        for (TodoRecord todoRecord: completedTasks) {
+            String status = TodoStatus.COMPLETED.name();
+
+            if (todoRecord.status().equals(status)) {
                 System.out.println("------------------------------------------------------------------");
 
                 System.out.println("id: " + todoRecord.id());
@@ -210,7 +201,7 @@ public class MainController {
                     editDescription();
                 }
                 case 3 -> {
-                    editCompleting();
+                    markTodoAsCompleted();
                 }
                 default -> {
                     return;
@@ -221,39 +212,50 @@ public class MainController {
     }
 
     private void editTitle() {
-        getTodo();
+        viewTodosMenu();
         int todoId = getNum("Which one todos title do you want to change?");
         String title = getText("Enter title");
 
         TodoRecord todoRecord = mainService.updateTodosTitle(todoId, title);
 
-        System.out.println(todoRecord);
+        if (todoRecord != null) {
+            System.out.println(todoRecord);
+        }else {
+            System.out.println("Empty data");
+        }
 
     }
 
     private void editDescription() {
-        getTodo();
+        viewTodosMenu();
 
         int todoId = getNum("Which one todos description do you want to change?");
         String description = getText("Enter description");
 
         TodoRecord todoRecord = mainService.updateTodosDescription(todoId, description);
 
-        System.out.println(todoRecord);
+        if (todoRecord != null) {
+            System.out.println(todoRecord);
+        }else {
+            System.out.println("Empty data");
+        }
     }
 
-    public void editCompleting() {
-        getTodo();
+    public void markTodoAsCompleted() {
+        viewTodosMenu();
 
         int todoId = getNum("Which one todos completing do you want to change?");
 
         TodoRecord todoRecord = mainService.updateTodosCompleting(todoId);
 
-        System.out.println(todoRecord);
+        if (todoRecord != null) {
+            System.out.println(todoRecord);
+        }
+
     }
 
     private void deleteTodo() {
-        getTodo();
+        viewTodosMenu();
         int todoId = getNum("Which one todos completing do you want to change?");
         boolean deleteToById = mainService.deleteToById(todoId);
 
