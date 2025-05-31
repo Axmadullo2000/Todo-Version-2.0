@@ -13,7 +13,7 @@ import static util.Util.*;
 public class MainController {
     MainService mainService = new MainService();
 
-    public void authMenu() {
+    public void startMenu() {
         {
             User user1 = new User("Axmadullo", "997494262", "123456789");
             user1.setId(userId);
@@ -89,6 +89,7 @@ public class MainController {
                 2. Read todo
                 3. Update todo
                 4. Delete todo
+                5. Search todo
                 """);
 
             int option = getNum("Choose an option");
@@ -105,6 +106,9 @@ public class MainController {
                 }
                 case 4 -> {
                     deleteTodo();
+                }
+                case 5 -> {
+                    searchResult();
                 }
                 default -> {
                     return;
@@ -267,4 +271,32 @@ public class MainController {
         }
     }
 
+    private void searchResult() {
+        String req = getText("Enter keyword to find todo");
+
+        TodoRecord [] searchResultArray = mainService.searchTodo(req);
+
+        if (searchResultArray.length == 0) {
+            System.out.println("Not found results");
+            return;
+        }else {
+            System.out.println("Search menu: ");
+        }
+
+        for (TodoRecord todo: searchResultArray) {
+            if (todo != null) {
+                System.out.println("Founded results: ");
+
+                System.out.println("------------------------------------------------------------------");
+
+                System.out.println("id: " + todo.id());
+                System.out.println("Title: " + todo.title());
+                System.out.println("Description: " + todo.description());
+                System.out.println("Status: " + todo.status());
+
+                System.out.println("------------------------------------------------------------------");
+            }
+        }
+
+    }
 }

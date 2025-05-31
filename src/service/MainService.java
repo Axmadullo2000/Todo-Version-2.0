@@ -160,4 +160,31 @@
             }
             return false;
         }
+
+
+        public TodoRecord[] searchTodo(String req) {
+            req = req.toLowerCase();
+
+            int counter = 0;
+
+            for (Todo value : todoList) {
+                if (value != null && (value.getTitle().toLowerCase().contains(req)
+                        || value.getDescription().toLowerCase().contains(req))) {
+                    counter++;
+                }
+            }
+
+            TodoRecord [] foundTodos = new TodoRecord[counter];
+
+            int index = 0;
+
+            for (Todo todo : todoList) {
+                if (todo != null && (todo.getTitle().toLowerCase().contains(req) || todo.getDescription().toLowerCase().contains(req))) {
+                    TodoRecord searchResponse = new TodoRecord(todo.getId(), todo.getTitle(), todo.getDescription(), todo.getStatus());
+                    foundTodos[index++] = searchResponse;
+                }
+            }
+
+            return foundTodos;
+        }
     }
